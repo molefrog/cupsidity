@@ -4,13 +4,14 @@
   "description": "CUPS native bindings for node.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test/test.js",
     "install": "node-gyp rebuild"
   },
   "keywords": [
     "cups",
     "printing",
-    "native"
+    "native",
+    "print"
   ],
   "author": "molefrog",
   "license": "ISC",
