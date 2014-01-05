@@ -19,17 +19,12 @@ Handle<Value> getDests(const Arguments& args) {
 	HandleScope scope;
 
 	cups_dest_t *dests;
-	int num_dests = cupsGetDests(&dests);
-
-	if(num_dests < 0) {
-		return scope.Close(Undefined());
-	}
-
-
-	Local<Array> destArray = Array::New(num_dests);
+	int numDests = cupsGetDests(&dests);
+	
+	Local<Array> destArray = Array::New(numDests);
 
 	cups_dest_t * dest = dests;
-	for (int destIdx = 0; destIdx < num_dests; ++destIdx, ++dest) {
+	for (int destIdx = 0; destIdx < numDests; ++destIdx, ++dest) {
 
 		Local<Object> destObject = Object::New();
 
@@ -63,7 +58,7 @@ Handle<Value> getDests(const Arguments& args) {
 	}
 
 
-	cupsFreeDests(num_dests, dests);
+	cupsFreeDests(numDests, dests);
 	return scope.Close( destArray );
 }
 
