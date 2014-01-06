@@ -26,7 +26,7 @@ Handle<Value> getJobs(const Arguments& args) {
 		NULL,	// NULL = all destinations, otherwise show jobs for 
 				// named destination
 		1, 		// 0 = all users, 1 = mine
-		CUPS_WHICHJOBS_ALL
+		CUPS_WHICHJOBS_ACTIVE
 	);
 
 	Local<Array> jobsArray = Array::New(numJobs);
@@ -58,13 +58,13 @@ Handle<Value> getJobs(const Arguments& args) {
 			Number::New(job->size));
 
 		// TODO: Date object
-		jobObject->Set(String::NewSymbol("processing_time"),
+		jobObject->Set(String::NewSymbol("processing_time_unix"),
 			Number::New(job->processing_time));
 
-		jobObject->Set(String::NewSymbol("creation_time"),
+		jobObject->Set(String::NewSymbol("creation_time_unix"),
 			Number::New(job->creation_time));
 
-		jobObject->Set(String::NewSymbol("completed_time"),
+		jobObject->Set(String::NewSymbol("completed_time_unix"),
 			Number::New(job->completed_time));
 
 		// TODO:

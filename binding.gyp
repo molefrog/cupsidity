@@ -5,7 +5,8 @@
       "sources": [ 
         "src/binding.cc",
         "src/dests.cc",
-        "src/jobs.cc"
+        "src/jobs.cc",
+        "src/printing.cc"
       ],
       "link_settings": {
         "libraries": [
