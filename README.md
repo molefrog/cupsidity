@@ -1,4 +1,15 @@
-# CUPS (Common Unix Printing System) native bindings for node.js
+## cupsnode
+CUPS (Common Unix Printing System) native bindings for node.js
+### Description
+The library provides native bindings for the CUPS Programming API. The library uses CUPS 1.4 since upper versions are not supported in OS X 10.6 (Snow Leopard).
+
+### Implemented Functions
+Currently only few basic functions are implemented, however the following set is pretty enough for basic printing and job management purposes.
+  * `cupsGetDests` 
+  * `cupsGetDefault`
+  * `cupsGetJobs`
+  * `cupsPrintFile`
+  * `cupsCancelJob`
 
 ### License
 The MIT License (MIT)
