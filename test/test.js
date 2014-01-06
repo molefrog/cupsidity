@@ -43,12 +43,3 @@ jobs.forEach(function(job) {
 
 console.log(cups.getDefault(), "Jobs:");
 console.log(jobsTable.toString());
-
-// console.log(cups.printFile({
-// 	title : 'testprint',
-// 	dest : cups.getDefault(),
-// 	filename : '/Users/molefrog/Desktop/ad2l43ZJtKM.jpg',
-// 	options : {
-// 		media : "Postcard(4x6in)"
-// 	}
-// }));
