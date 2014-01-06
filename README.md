@@ -1,4 +1,4 @@
-## cupsnode
+## Cupsidity
 CUPS (Common Unix Printing System) native bindings for node.js
 ### Description
 The library provides native bindings for the CUPS Programming API. The library uses CUPS 1.4 since upper versions are not supported in OS X 10.6 (Snow Leopard).

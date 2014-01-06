@@ -1,7 +1,7 @@
 {
-  "name": "cupsnode",
+  "name": "cupsidity",
   "version": "0.0.1",
-  "repository" : "https://github.com/molefrog/cupsnode",
+  "repository" : "https://github.com/molefrog/cupsidity",
   "description": "CUPS native bindings for node.js",
   "main": "index.js",
   "scripts": {
