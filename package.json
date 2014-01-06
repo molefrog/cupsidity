@@ -15,5 +15,8 @@
   ],
   "author": "molefrog",
   "license": "ISC",
-  "gypfile": true
+  "gypfile": true,
+  "devDependencies": {
+    "cli-table": "~0.2.0"
+  }
 }

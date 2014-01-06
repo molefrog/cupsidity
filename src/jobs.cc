@@ -18,15 +18,48 @@ using namespace v8;
 Handle<Value> getJobs(const Arguments& args) {
 	HandleScope scope;
 
-	cups_job_t *jobs;
+	std::string destName;
+	std::string which;
 
+   	const char * destNameC = NULL;
+   	bool mine = true;
+   	int whichJobs = CUPS_WHICHJOBS_ALL;
+
+	if(args.Length() > 0) {
+		Local<Object> configObject = args[0]->ToObject();
+
+	    if(configObject->Has(String::NewSymbol("dest")))
+	    	destName = *String::Utf8Value(
+	    		configObject->Get(String::NewSymbol("dest") ));
+
+	    if(configObject->Has(String::NewSymbol("mine")))
+	    	mine = configObject->Get(String::NewSymbol("mine"))
+	    		->ToBoolean()->Value();
+
+	     if(configObject->Has(String::NewSymbol("which"))) {
+	    	which = *String::Utf8Value(
+	    		configObject->Get(String::NewSymbol("which") ));
+
+	    	if(false);
+	    	else if(which == "all") 		whichJobs = CUPS_WHICHJOBS_ALL;
+	    	else if(which == "active") 		whichJobs = CUPS_WHICHJOBS_ACTIVE;
+	    	else if(which == "completed")	whichJobs = CUPS_WHICHJOBS_COMPLETED;
+	     }
+	}
+
+   	if(!destName.empty()) {
+   		destNameC = destName.c_str();
+   	} 
+
+
+	cups_job_t *jobs;
 	// TODO: 2nd and 4th arguments!
 	int numJobs = cupsGetJobs(
 		&jobs,
-		NULL,	// NULL = all destinations, otherwise show jobs for 
-				// named destination
-		1, 		// 0 = all users, 1 = mine
-		CUPS_WHICHJOBS_ACTIVE
+		destNameC,	// NULL = all destinations, otherwise show jobs for 
+					// named destination
+		(int) mine, 		// 0 = all users, 1 = mine
+		whichJobs
 	);
 
 	Local<Array> jobsArray = Array::New(numJobs);
@@ -57,27 +90,46 @@ Handle<Value> getJobs(const Arguments& args) {
 		jobObject->Set(String::NewSymbol("size"),
 			Number::New(job->size));
 
-		// TODO: Date object
-		jobObject->Set(String::NewSymbol("processing_time_unix"),
+		jobObject->Set(String::NewSymbol("processing_time"),
 			Number::New(job->processing_time));
 
-		jobObject->Set(String::NewSymbol("creation_time_unix"),
+		jobObject->Set(String::NewSymbol("creation_time"),
 			Number::New(job->creation_time));
 
-		jobObject->Set(String::NewSymbol("completed_time_unix"),
+		jobObject->Set(String::NewSymbol("completed_time"),
 			Number::New(job->completed_time));
 
-		// TODO:
-		// job->state:
-		//	IPP_JOB_PENDING = 3,
-		//	IPP_JOB_HELD = 4,
-		//	IPP_JOB_PROCESSING = 5,
-		//	IPP_JOB_STOPPED = 6,
-		//	IPP_JOB_CANCELLED = 7,
-		//	IPP_JOB_ABORTED = 8,
-		//	IPP_JOB_COMPLETED = 9
-		jobObject->Set(String::NewSymbol("state"),
+		jobObject->Set(String::NewSymbol("state_number"),
 			Number::New(job->state));
+
+		std::string state;
+		switch(job->state) {
+			case IPP_JOB_PENDING: 		
+				state = "pending"; 
+				break;
+			case IPP_JOB_HELD: 		
+				state = "held"; 
+				break;
+			case IPP_JOB_PROCESSING: 	
+				state = "processing"; 
+				break;
+			case IPP_JOB_STOPPED: 		
+				state = "stopped"; 
+				break;
+			case IPP_JOB_CANCELLED: 	
+				state = "cancelled"; 
+				break;
+			case IPP_JOB_ABORTED: 		
+				state = "aborted"; 
+				break;
+			case IPP_JOB_COMPLETED: 	
+				state = "completed"; 
+				break;
+			default: state = "unknown";
+		}
+
+		jobObject->Set(String::NewSymbol("state"),
+			String::New(state.c_str()));
 
 		jobsArray->Set(jobIdx, jobObject);
 	}
@@ -94,13 +146,19 @@ Handle<Value> getJobs(const Arguments& args) {
 Handle<Value> cancelJob(const Arguments& args) {
 	HandleScope scope;
 
-	// TODO: parse arguments!
-	// Job ID, CUPS_JOBID_CURRENT for the current job, or CUPS_JOBID_ALL for all jobs
-	int jobId = 0;
+	Local<Object> configObject = args[0]->ToObject();
 
-	const char * destName = "";
+    int jobId = 0;
+    if(configObject->Has(String::NewSymbol("id")))
+    	jobId = configObject->Get(String::NewSymbol("id") )
+    		->ToNumber()->Value();
 
-	int success = cupsCancelJob( destName, jobId );
+	std::string destName;
+    if(configObject->Has(String::NewSymbol("dest")))
+    	destName = *String::Utf8Value(
+    		configObject->Get(String::NewSymbol("dest") ));
+
+	int success = cupsCancelJob( destName.c_str(), jobId );
 
 	return scope.Close( Boolean::New( success) );
 }
