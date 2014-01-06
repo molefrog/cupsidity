@@ -11,6 +11,9 @@ Currently only few basic functions are implemented, however the following set is
   * `cupsPrintFile`
   * `cupsCancelJob`
 
+### Testing
+The `npm test` command will list currently installed destinations (printers) and print jobs for default printer.
+
 ### License
 The MIT License (MIT)
 
