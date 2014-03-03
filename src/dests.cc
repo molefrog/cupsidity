@@ -69,8 +69,15 @@ Handle<Value> getDests(const Arguments& args) {
 Handle<Value> getDefault(const Arguments& args) {
 	HandleScope scope;
 
-	Local<String> defaultDest = 
-		String::New( cupsGetDefault() );
+	const char * defaultDest = cupsGetDefault();
 
-	return scope.Close(defaultDest);
+	// Watch out, cupsGetDefault can return NULL!
+	if( defaultDest == NULL ) {
+		defaultDest = "";
+	}
+
+	Local<String> defaultDestString = 
+		String::New( defaultDest );
+
+	return scope.Close( defaultDestString );
 }
